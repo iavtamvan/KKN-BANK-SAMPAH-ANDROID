@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ACCD0A</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+<!--    warna logo-->
+    <color name="logoHijauDark">#46A307</color>
+    <color name="logoHijau">#ACCD0A</color>
+    <color name="logoBiruMuda">#519CCE</color>
+    <color name="logoBiruMudaDark">#0F50C2</color>
+    <color name="logoNavy">#128E7B</color>
+    <color name="logoOrange">#EA3B07</color>
+    <color name="logoMerah">#F90008</color>
+    <color name="logoKuning">#FFF10A</color>
+    <color name="logoUngu">#800096</color>
+</resources>
