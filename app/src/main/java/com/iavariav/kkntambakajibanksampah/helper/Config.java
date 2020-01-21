@@ -116,6 +116,10 @@ public final class Config {
         editor.putString(Config.SHARED_PREF_ID, "");
         editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, "");
         editor.putString(Config.SHARED_PREF_RULE, "");
+        editor.putString(Config.SHARED_PREF_ALAMAT_USER, "");
+        editor.putString(Config.SHARED_PREF_LAT_USER, "");
+        editor.putString(Config.SHARED_PREF_LONG_USER, "");
+        editor.putString(Config.SHARED_PREF_FIREBASE_ID, "");
 //        editor.putString("regId", "");
         editor.apply();
 

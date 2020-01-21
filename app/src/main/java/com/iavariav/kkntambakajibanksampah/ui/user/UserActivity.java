@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.iavariav.kkntambakajibanksampah.R;
+import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.InputSampahFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.RiwayatSampahFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.RiwayatTukarSampahFragment;
@@ -99,6 +100,9 @@ public class UserActivity extends AppCompatActivity
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatTukarSampahFragment()).commit();
             getSupportActionBar().setTitle("Riwayat Tukar Poin");
+        } else if (id == R.id.keluar) {
+            Config.logout(UserActivity.this);
+            getSupportActionBar().setTitle("Keluar");
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

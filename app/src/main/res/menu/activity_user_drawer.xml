@@ -20,6 +20,10 @@
             android:id="@+id/riwayat_tukar_poin"
             android:icon="@drawable/logo"
             android:title="Riwayat Tukar Poin" />
+        <item
+            android:id="@+id/keluar"
+            android:icon="@drawable/logo"
+            android:title="Keluar" />
     </group>
 
 </menu>
