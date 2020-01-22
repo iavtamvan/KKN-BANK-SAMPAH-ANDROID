@@ -32,12 +32,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class StokBarangAdapter extends RecyclerView.Adapter<StokBarangAdapter.ViewHolder> {
+public class TukarBarangAdapter extends RecyclerView.Adapter<TukarBarangAdapter.ViewHolder> {
     private Context context;
     private ArrayList<StokBarangModel> menuModels;
 
 
-    public StokBarangAdapter(Context context, ArrayList<StokBarangModel> menuModels) {
+    public TukarBarangAdapter(Context context, ArrayList<StokBarangModel> menuModels) {
         this.context = context;
         this.menuModels = menuModels;
     }
@@ -107,7 +107,7 @@ public class StokBarangAdapter extends RecyclerView.Adapter<StokBarangAdapter.Vi
     }
 
     @Override
-    public int getItemCount() {
+    public int getItemCount(){
         return menuModels.size();
     }
 

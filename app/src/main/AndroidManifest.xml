@@ -23,6 +23,8 @@
             android:label="Bank Sampah"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity android:name=".ui.petugas.PetugasActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

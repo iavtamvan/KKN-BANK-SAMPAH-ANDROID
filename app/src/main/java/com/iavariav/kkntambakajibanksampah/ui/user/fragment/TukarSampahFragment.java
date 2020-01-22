@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iavariav.kkntambakajibanksampah.R;
-import com.iavariav.kkntambakajibanksampah.adapter.StokBarangAdapter;
+import com.iavariav.kkntambakajibanksampah.adapter.TukarBarangAdapter;
 import com.iavariav.kkntambakajibanksampah.model.StokBarangModel;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
@@ -57,10 +57,10 @@ public class TukarSampahFragment extends Fragment {
                         if (response.isSuccessful()){
                             stokBarangModels = response.body();
                             for (int i = 0; i < stokBarangModels.size(); i++) {
-                                StokBarangAdapter stokBarangAdapter = new StokBarangAdapter(getActivity(), stokBarangModels);
+                                TukarBarangAdapter tukarBarangAdapter = new TukarBarangAdapter(getActivity(), stokBarangModels);
                                 rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-                                rv.setAdapter(stokBarangAdapter);
-                                stokBarangAdapter.notifyDataSetChanged();
+                                rv.setAdapter(tukarBarangAdapter);
+                                tukarBarangAdapter.notifyDataSetChanged();
                             }
                         }
                     }

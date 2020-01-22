@@ -15,6 +15,7 @@ import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
+import com.iavariav.kkntambakajibanksampah.ui.petugas.PetugasActivity;
 import com.iavariav.kkntambakajibanksampah.ui.user.UserActivity;
 
 import org.json.JSONException;
@@ -65,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                             Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
 
-                                            if (error_msg.equalsIgnoreCase("Berhasil Login")) {
+                                            if (rule.equalsIgnoreCase("user")) {
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, username);
@@ -77,7 +78,20 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
                                                 editor.apply();
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                            } else {
+                                            } else if (rule.equalsIgnoreCase("petugas")){
+                                                SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, username);
+                                                editor.putString(Config.SHARED_PREF_RULE, rule);
+                                                editor.putString(Config.SHARED_PREF_ID, id);
+                                                editor.putString(Config.SHARED_PREF_ALAMAT_USER, alamat_user);
+                                                editor.putString(Config.SHARED_PREF_LAT_USER, lat_user);
+                                                editor.putString(Config.SHARED_PREF_LONG_USER, long_user);
+                                                editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
+                                                editor.apply();
+                                                startActivity(new Intent(getApplicationContext(), PetugasActivity.class));
+                                            }
+                                            else {
                                                 Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
                                             }
 

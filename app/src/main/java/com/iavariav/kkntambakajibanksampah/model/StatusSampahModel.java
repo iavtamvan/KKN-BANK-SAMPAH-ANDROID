@@ -2,13 +2,13 @@ package com.iavariav.kkntambakajibanksampah.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RiwayatModel {
+public class StatusSampahModel {
 
     @SerializedName("id_bs")
     private String idBs;
 
     @SerializedName("nama_petugas")
-    private String namaPetugas;
+    private Object namaPetugas;
 
     @SerializedName("status_sampah")
     private String statusSampah;
@@ -43,51 +43,6 @@ public class RiwayatModel {
     @SerializedName("alamat_penyetor")
     private String alamatPenyetor;
 
-    @SerializedName("tipe_barang")
-    private String tipeBarang;
-
-    @SerializedName("kadaluarsa_barang")
-    private String kadaluarsaBarang;
-
-    @SerializedName("nama_pemasok")
-    private String namaPemasok;
-
-    @SerializedName("foto_url_barang")
-    private String fotoUrlBarang;
-
-
-    public String getFotoUrlBarang() {
-        return fotoUrlBarang;
-    }
-
-    public void setFotoUrlBarang(String fotoUrlBarang) {
-        this.fotoUrlBarang = fotoUrlBarang;
-    }
-
-    public String getNamaPemasok() {
-        return namaPemasok;
-    }
-
-    public void setNamaPemasok(String namaPemasok) {
-        this.namaPemasok = namaPemasok;
-    }
-
-    public String getKadaluarsaBarang() {
-        return kadaluarsaBarang;
-    }
-
-    public void setKadaluarsaBarang(String kadaluarsaBarang) {
-        this.kadaluarsaBarang = kadaluarsaBarang;
-    }
-
-    public String getTipeBarang() {
-        return tipeBarang;
-    }
-
-    public void setTipeBarang(String tipeBarang) {
-        this.tipeBarang = tipeBarang;
-    }
-
     public void setIdBs(String idBs) {
         this.idBs = idBs;
     }
@@ -96,11 +51,11 @@ public class RiwayatModel {
         return idBs;
     }
 
-    public void setNamaPetugas(String namaPetugas) {
+    public void setNamaPetugas(Object namaPetugas) {
         this.namaPetugas = namaPetugas;
     }
 
-    public String getNamaPetugas() {
+    public Object getNamaPetugas() {
         return namaPetugas;
     }
 

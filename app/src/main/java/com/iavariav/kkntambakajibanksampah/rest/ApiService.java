@@ -1,6 +1,7 @@
 package com.iavariav.kkntambakajibanksampah.rest;
 
 import com.iavariav.kkntambakajibanksampah.model.RiwayatModel;
+import com.iavariav.kkntambakajibanksampah.model.StatusSampahModel;
 import com.iavariav.kkntambakajibanksampah.model.StokBarangModel;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public interface ApiService {
     @GET("api_get.php")
     Call<ArrayList<RiwayatModel>> getTukarBarangRiwayat(@Query("change") String change,
                                                            @Query("id_user") String idUser);
+    @GET("api_get.php")
+    Call<ArrayList<StatusSampahModel>> getStatusBarang(@Query("change") String change,
+                                                       @Query("id_user") String idUser);
 
     @FormUrlEncoded
     @POST("user/api__tambah_pemesanan_sampah.php")
@@ -57,5 +61,11 @@ public interface ApiService {
                                 @Field("tgl_penukaran_barang") String tgl_penukaran_barang,
                                 @Field("kadaluarsa_barang") String kadaluarsa_barang,
                                 @Field("change") String change
+    );
+    @FormUrlEncoded
+    @POST("petugas/aprove_sampah.php")
+    Call<ResponseBody> postAproveSampah(
+                                @Field("token_reg") String token_reg,
+                                @Field("status_sampah") String status_sampah
     );
 }
