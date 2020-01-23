@@ -1,5 +1,6 @@
 package com.iavariav.kkntambakajibanksampah.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,12 +38,15 @@ public class LoginActivity extends AppCompatActivity {
     private TextView tvCallme;
     private Button btnMasuk;
 
+    private static final int RC_CAMERA_AND_LOCATION = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
-
+        getSupportActionBar().hide();
+        methodRequiresTwoPermission();
         btnMasuk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                             JSONObject jsonObject = new JSONObject(response.body().string());
                                             String error_msg = jsonObject.optString("error_msg");
                                             String username = jsonObject.optString("username");
+                                            String namaUser = jsonObject.optString("nama_user");
                                             String rule = jsonObject.optString("rule");
                                             String id = jsonObject.optString("id");
                                             String alamat_user = jsonObject.optString("alamat_user");
@@ -69,27 +76,31 @@ public class LoginActivity extends AppCompatActivity {
                                             if (rule.equalsIgnoreCase("user")) {
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                                editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, username);
+                                                editor.putString(Config.SHARED_PREF_USERNAME, username);
                                                 editor.putString(Config.SHARED_PREF_RULE, rule);
                                                 editor.putString(Config.SHARED_PREF_ID, id);
                                                 editor.putString(Config.SHARED_PREF_ALAMAT_USER, alamat_user);
                                                 editor.putString(Config.SHARED_PREF_LAT_USER, lat_user);
                                                 editor.putString(Config.SHARED_PREF_LONG_USER, long_user);
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
+                                                editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
                                                 editor.apply();
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                                finishAffinity();
                                             } else if (rule.equalsIgnoreCase("petugas")){
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                                editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, username);
+                                                editor.putString(Config.SHARED_PREF_USERNAME, username);
                                                 editor.putString(Config.SHARED_PREF_RULE, rule);
                                                 editor.putString(Config.SHARED_PREF_ID, id);
                                                 editor.putString(Config.SHARED_PREF_ALAMAT_USER, alamat_user);
                                                 editor.putString(Config.SHARED_PREF_LAT_USER, lat_user);
                                                 editor.putString(Config.SHARED_PREF_LONG_USER, long_user);
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
+                                                editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
                                                 editor.apply();
                                                 startActivity(new Intent(getApplicationContext(), PetugasActivity.class));
+                                                finishAffinity();
                                             }
                                             else {
                                                 Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
@@ -112,6 +123,20 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    @AfterPermissionGranted(RC_CAMERA_AND_LOCATION)
+    private void methodRequiresTwoPermission() {
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            // Already have permission, do the thing
+            // ...
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, getString(R.string.app_name),
+                    RC_CAMERA_AND_LOCATION, perms);
+        }
     }
 
     private void initView() {

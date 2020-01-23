@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
@@ -28,6 +26,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Random;
 
+import im.delight.android.location.SimpleLocation;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +54,8 @@ public class InputSampahFragment extends Fragment {
     private String long_user;
     private String firebase_id;
 
+    private SimpleLocation location;
+
     public InputSampahFragment() {
         // Required empty public constructor
     }
@@ -66,8 +67,10 @@ public class InputSampahFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_sampah, container, false);
         initView(view);
+        location = new SimpleLocation(getActivity());
+
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        username = sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, "");
+        username = sharedPreferences.getString(Config.SHARED_PREF_USERNAME, "");
         rule = sharedPreferences.getString(Config.SHARED_PREF_RULE, "");
         id = sharedPreferences.getString(Config.SHARED_PREF_ID, "");
         alamat_user = sharedPreferences.getString(Config.SHARED_PREF_ALAMAT_USER, "");
@@ -93,8 +96,8 @@ public class InputSampahFragment extends Fragment {
             public void onClick(View view) {
                 beratPoin = 10 * Integer.parseInt(edtBeratSampah.getText().toString().trim());
                 ApiService apiService = Client.getInstanceRetrofit();
-                apiService.postPemesanan(id, username, alamat_user, lat_user, long_user, selectedSpn, edtBeratSampah.getText().toString().trim(),
-                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + "kvsn-j/" + i1, String.valueOf(beratPoin))
+                apiService.postPemesanan(id, username, alamat_user, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), selectedSpn, edtBeratSampah.getText().toString().trim(),
+                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin))
                         .enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -31,6 +31,8 @@ public interface ApiService {
     @GET("api_get.php")
     Call<ArrayList<StatusSampahModel>> getStatusBarang(@Query("change") String change,
                                                        @Query("id_user") String idUser);
+    @GET("api_get.php")
+    Call<ArrayList<StatusSampahModel>> getStatusBarangSelesai(@Query("change") String change);
 
     @FormUrlEncoded
     @POST("user/api__tambah_pemesanan_sampah.php")
@@ -66,6 +68,7 @@ public interface ApiService {
     @POST("petugas/aprove_sampah.php")
     Call<ResponseBody> postAproveSampah(
                                 @Field("token_reg") String token_reg,
-                                @Field("status_sampah") String status_sampah
+                                @Field("status_sampah") String status_sampah,
+                                @Field("nama_petugas") String nama_petugas
     );
 }

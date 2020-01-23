@@ -7,19 +7,11 @@
         <item
             android:id="@+id/pemesanan_sampah"
             android:icon="@drawable/logo"
-            android:title="Kirim Sampah" />
+            android:title="Ambil Sampah" />
         <item
             android:id="@+id/riwayat_sampah"
             android:icon="@drawable/logo"
-            android:title="Riwayat Pengiriman" />
-        <item
-            android:id="@+id/tukar_sampah"
-            android:icon="@drawable/logo"
-            android:title="Tukar Poin" />
-        <item
-            android:id="@+id/riwayat_tukar_poin"
-            android:icon="@drawable/logo"
-            android:title="Riwayat Tukar Poin" />
+            android:title="Riwayat Ambil Sampah" />
         <item
             android:id="@+id/keluar"
             android:icon="@drawable/logo"

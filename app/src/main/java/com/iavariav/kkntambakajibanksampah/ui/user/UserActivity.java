@@ -102,6 +102,7 @@ public class UserActivity extends AppCompatActivity
             getSupportActionBar().setTitle("Riwayat Tukar Poin");
         } else if (id == R.id.keluar) {
             Config.logout(UserActivity.this);
+            finishAffinity();
             getSupportActionBar().setTitle("Keluar");
         }
 

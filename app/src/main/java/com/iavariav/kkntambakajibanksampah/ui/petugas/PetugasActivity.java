@@ -87,21 +87,24 @@ public class PetugasActivity extends AppCompatActivity
         if (id == R.id.pemesanan_sampah) {
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new AproveFragment()).commit();
-            getSupportActionBar().setTitle("Input Sampah");
+            getSupportActionBar().setTitle("Ambil Sampah");
         } else if (id == R.id.riwayat_sampah) {
             fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatSampahFragment()).commit();
-            getSupportActionBar().setTitle("Riwayat Pemesanan");
-        } else if (id == R.id.tukar_sampah) {
-            fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new TukarSampahFragment()).commit();
-            getSupportActionBar().setTitle("Tukar Poin");
-        } else if (id == R.id.riwayat_tukar_poin) {
-            fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatTukarSampahFragment()).commit();
-            getSupportActionBar().setTitle("Riwayat Tukar Poin");
-        } else if (id == R.id.keluar) {
+            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatPetugasAmbilSampahFragment()).commit();
+            getSupportActionBar().setTitle("Riwayat Ambil Sampah");
+        }
+//        else if (id == R.id.tukar_sampah) {
+//            fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new TukarSampahFragment()).commit();
+//            getSupportActionBar().setTitle("Tukar Poin");
+//        } else if (id == R.id.riwayat_tukar_poin) {
+//            fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatTukarSampahFragment()).commit();
+//            getSupportActionBar().setTitle("Riwayat Tukar Poin");
+//        }
+        else if (id == R.id.keluar) {
             Config.logout(PetugasActivity.this);
+            finishAffinity();
             getSupportActionBar().setTitle("Keluar");
         }
 

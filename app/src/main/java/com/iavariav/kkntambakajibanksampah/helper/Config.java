@@ -3,31 +3,21 @@ package com.iavariav.kkntambakajibanksampah.helper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.iavariav.kkntambakajibanksampah.ui.LoginActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public final class Config {
     public static final String SHARED_PREF_NAME = "KKN_TAMBAK_AJI2020";
     public static final String SHARED_PREF_ID = "KKN_ID_USER";
-    public static final String SHARED_PREF_NAMA_LENGKAP = "KKN_USERNAME";
+    public static final String SHARED_PREF_USERNAME = "KKN_USERNAME";
     public static final String SHARED_PREF_RULE = "KKN_RULE";
     public static final String SHARED_PREF_ALAMAT_USER = "ALAMAT_USER";
     public static final String SHARED_PREF_LAT_USER = "LAT_USER";
     public static final String SHARED_PREF_LONG_USER = "LONG_USER";
     public static final String SHARED_PREF_FIREBASE_ID = "FIREBASE_ID";
+    public static final String SHARED_PREF_NAMA_LENGKAP = "NAMA_LENGKAP";
 
 
     public static final String SHARED_PREF_REGID_FIREBASE = "KKN_REGID_FIREBASE";
@@ -71,12 +61,13 @@ public final class Config {
     public static final String BUNDLE_REG_TOKEN_PEMESANAN = "BUNDLE_REG_TOKEN_PEMESANAN";
 
 
+
     public static void sharedPref(Context context, String idUser, String username, String rule) {
         SharedPreferences sharedPreferences  = context.getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString(Config.SHARED_PREF_ID, idUser);
-        editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, username);
+        editor.putString(Config.SHARED_PREF_USERNAME, username);
         editor.putString(Config.SHARED_PREF_RULE, rule);
 
 
@@ -114,7 +105,7 @@ public final class Config {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putString(Config.SHARED_PREF_ID, "");
-        editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, "");
+        editor.putString(Config.SHARED_PREF_USERNAME, "");
         editor.putString(Config.SHARED_PREF_RULE, "");
         editor.putString(Config.SHARED_PREF_ALAMAT_USER, "");
         editor.putString(Config.SHARED_PREF_LAT_USER, "");

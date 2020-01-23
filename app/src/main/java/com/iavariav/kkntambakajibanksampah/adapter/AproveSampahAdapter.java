@@ -1,9 +1,10 @@
 package com.iavariav.kkntambakajibanksampah.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.model.StatusSampahModel;
-import com.iavariav.kkntambakajibanksampah.model.StokBarangModel;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
 import com.iavariav.kkntambakajibanksampah.ui.petugas.PetugasActivity;
@@ -37,11 +36,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AproveTukarBarangAdapter extends RecyclerView.Adapter<AproveTukarBarangAdapter.ViewHolder> {
+public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapter.ViewHolder> {
     private Context context;
     private ArrayList<StatusSampahModel> menuModels;
 
-    public AproveTukarBarangAdapter(Context context, ArrayList<StatusSampahModel> menuModels) {
+    public AproveSampahAdapter(Context context, ArrayList<StatusSampahModel> menuModels) {
         this.context = context;
         this.menuModels = menuModels;
     }
@@ -60,7 +59,7 @@ public class AproveTukarBarangAdapter extends RecyclerView.Adapter<AproveTukarBa
         holder.tvTgl.setText(menuModels.get(position).getTglInput());
         holder.tvPoint.setText(menuModels.get(position).getStatusSampah());
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = context.getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.getStatusBarang("getStatusSampah", sharedPreferences.getString(Config.SHARED_PREF_ID, ""))
                 .enqueue(new Callback<ArrayList<StatusSampahModel>>() {
@@ -95,7 +94,7 @@ public class AproveTukarBarangAdapter extends RecyclerView.Adapter<AproveTukarBa
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ApiService apiService = Client.getInstanceRetrofit();
-                        apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Ambil")
+                        apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Ambil", sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, ""))
                                 .enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -104,6 +103,12 @@ public class AproveTukarBarangAdapter extends RecyclerView.Adapter<AproveTukarBa
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
                                                 Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                Uri gmmIntentUri = Uri.parse("geo:"+ menuModels.get(position).getLat() + ", " + menuModels.get(position).getLongi());
+                                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                                                mapIntent.setPackage("com.google.android.apps.maps");
+                                                if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                                                    context.startActivity(mapIntent);
+                                                }
                                                 ((PetugasActivity)context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -141,7 +146,7 @@ public class AproveTukarBarangAdapter extends RecyclerView.Adapter<AproveTukarBa
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ApiService apiService = Client.getInstanceRetrofit();
-                        apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Selesai")
+                        apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Selesai", sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, ""))
                                 .enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

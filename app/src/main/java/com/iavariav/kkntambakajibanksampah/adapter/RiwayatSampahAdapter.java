@@ -33,9 +33,13 @@ public class RiwayatSampahAdapter extends RecyclerView.Adapter<RiwayatSampahAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.tvToken.setText(menuModels.get(position).getTokenReg());
-        holder.tvJenisBerat.setText(menuModels.get(position).getJenisSampah() + ", "  + menuModels.get(position).getBeratSampah());
-        holder.tvNamaPetugas.setText("Sudah ambil oleh " +menuModels.get(position).getNamaPetugas());
+        holder.tvToken.setText(menuModels.get(position).getStatusSampah());
+        holder.tvJenisBerat.setText(menuModels.get(position).getJenisSampah() + ", " + menuModels.get(position).getBeratSampah() + "Kg");
+//        if (menuModels.get(position).getNamaPetugas() == null){
+//        holder.tvNamaPetugas.setText("Sudah ambil oleh.... ");
+//        } else {
+        holder.tvNamaPetugas.setText("Sudah ambil oleh " + menuModels.get(position).getNamaPetugas());
+//        }
         holder.tvTgl.setText(menuModels.get(position).getTglInput());
 
     }

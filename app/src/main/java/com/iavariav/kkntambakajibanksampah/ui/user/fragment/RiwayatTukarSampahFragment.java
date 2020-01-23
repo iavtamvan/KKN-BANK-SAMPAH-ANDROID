@@ -1,6 +1,8 @@
 package com.iavariav.kkntambakajibanksampah.ui.user.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.adapter.RiwayatTukarBarangAdapter;
+import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.model.RiwayatModel;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
@@ -31,6 +34,7 @@ public class RiwayatTukarSampahFragment extends Fragment {
 
     private ArrayList<RiwayatModel> riwayatModels;
     private RecyclerView rv;
+    private String idUser;
 
     public RiwayatTukarSampahFragment() {
         // Required empty public constructor
@@ -43,6 +47,8 @@ public class RiwayatTukarSampahFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_riwayat_tukar_sampah, container, false);
         initView(view);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        idUser = sharedPreferences.getString(Config.SHARED_PREF_ID, "");
         getRiwayatTukarSampah();
         return view;
     }
@@ -50,7 +56,7 @@ public class RiwayatTukarSampahFragment extends Fragment {
 
     private void getRiwayatTukarSampah() {
         ApiService apiService = Client.getInstanceRetrofit();
-        apiService.getTukarBarangRiwayat("getTukarBarangRiwayat", "1")
+        apiService.getTukarBarangRiwayat("getTukarBarangRiwayat", idUser)
                 .enqueue(new Callback<ArrayList<RiwayatModel>>() {
                     @Override
                     public void onResponse(Call<ArrayList<RiwayatModel>> call, Response<ArrayList<RiwayatModel>> response) {
