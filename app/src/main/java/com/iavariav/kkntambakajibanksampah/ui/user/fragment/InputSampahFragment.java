@@ -53,6 +53,7 @@ public class InputSampahFragment extends Fragment {
     private String lat_user;
     private String long_user;
     private String firebase_id;
+    private String namaLengkap;
 
     private SimpleLocation location;
 
@@ -69,7 +70,7 @@ public class InputSampahFragment extends Fragment {
         initView(view);
         location = new SimpleLocation(getActivity());
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(Config.SHARED_PREF_USERNAME, "");
         rule = sharedPreferences.getString(Config.SHARED_PREF_RULE, "");
         id = sharedPreferences.getString(Config.SHARED_PREF_ID, "");
@@ -77,6 +78,7 @@ public class InputSampahFragment extends Fragment {
         lat_user = sharedPreferences.getString(Config.SHARED_PREF_LAT_USER, "");
         long_user = sharedPreferences.getString(Config.SHARED_PREF_LONG_USER, "");
         firebase_id = sharedPreferences.getString(Config.SHARED_PREF_FIREBASE_ID, "");
+        namaLengkap = sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, "");
 
         Random r = new Random();
         final int i1 = (r.nextInt(80) + 65);
@@ -96,8 +98,8 @@ public class InputSampahFragment extends Fragment {
             public void onClick(View view) {
                 beratPoin = 10 * Integer.parseInt(edtBeratSampah.getText().toString().trim());
                 ApiService apiService = Client.getInstanceRetrofit();
-                apiService.postPemesanan(id, username, alamat_user, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), selectedSpn, edtBeratSampah.getText().toString().trim(),
-                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin))
+                apiService.postPemesanan(id, namaLengkap, alamat_user, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), selectedSpn, edtBeratSampah.getText().toString().trim(),
+                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin), sharedPreferences.getString("regId", ""))
                         .enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

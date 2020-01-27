@@ -40,6 +40,7 @@ import retrofit2.Response;
 public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapter.ViewHolder> {
     private Context context;
     private ArrayList<StatusSampahModel> menuModels;
+    String regId;
 
     public AproveSampahAdapter(Context context, ArrayList<StatusSampahModel> menuModels) {
         this.context = context;
@@ -61,12 +62,12 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         holder.tvPoint.setText(menuModels.get(position).getStatusSampah());
 
         final SharedPreferences sharedPreferences = context.getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        final String regId = sharedPreferences.getString("regId", "");
-        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+        regId = menuModels.get(position).getFirebaseId();
+//        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.getStatusBarang("getStatusSampah", sharedPreferences.getString(Config.SHARED_PREF_ID, ""))
                 .enqueue(new Callback<ArrayList<StatusSampahModel>>() {
@@ -111,10 +112,10 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
                                                 Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
-                                                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f", 28.43242324,77.8977673);
+                                                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f", Double.valueOf(menuModels.get(position).getLat()),Double.valueOf(menuModels.get(position).getLat()));
                                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                                                 context.startActivity(intent);
-                                                pushNotif(context, "Notifikasi", "Sampah di ambil oleh Petugas", regId);
+                                                pushNotif(context, "Notifikasi", "Sampah di ambil oleh Petugas Oleh " + menuModels.get(position).getNamaPetugas(), regId);
                                                 ((PetugasActivity)context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -161,7 +162,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
                                                 Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
-                                                pushNotif(context, "Notifikasi", "Sampah telah selesai di proses", regId);
+                                                pushNotif(context, "Notifikasi", "Sampah telah selesai di proses Oleh " + menuModels.get(position).getNamaPetugas(), regId);
                                                 ((PetugasActivity)context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

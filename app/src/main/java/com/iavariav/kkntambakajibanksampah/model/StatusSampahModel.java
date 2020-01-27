@@ -42,6 +42,16 @@ public class StatusSampahModel {
 
     @SerializedName("alamat_penyetor")
     private String alamatPenyetor;
+    @SerializedName("firebase_id")
+    private String firebaseId;
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
+    }
 
     public void setIdBs(String idBs) {
         this.idBs = idBs;

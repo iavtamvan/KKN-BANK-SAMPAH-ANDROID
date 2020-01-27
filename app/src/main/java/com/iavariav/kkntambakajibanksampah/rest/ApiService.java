@@ -57,7 +57,8 @@ public interface ApiService {
                                 @Field("berat_sampah") String berat_sampah,
                                 @Field("status_sampah") String status_sampah,
                                 @Field("token_reg") String token_reg,
-                                @Field("point") String point
+                                @Field("point") String point,
+                                @Field("firebase_id") String firebase_id
     );
     @FormUrlEncoded
     @POST("api_update_reg_id.php")
