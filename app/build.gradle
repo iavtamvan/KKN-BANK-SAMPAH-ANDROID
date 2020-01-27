@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -37,6 +37,11 @@ dependencies {
     implementation 'com.airbnb.android:lottie:2.2.0'
     // permission for android
     implementation 'pub.devrel:easypermissions:2.0.1'
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+
+    //untuk push notif
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'

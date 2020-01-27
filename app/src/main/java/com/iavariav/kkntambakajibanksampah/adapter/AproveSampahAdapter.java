@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -60,6 +61,12 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         holder.tvPoint.setText(menuModels.get(position).getStatusSampah());
 
         final SharedPreferences sharedPreferences = context.getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        final String regId = sharedPreferences.getString("regId", "");
+        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "" + regId, Toast.LENGTH_SHORT).show();
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.getStatusBarang("getStatusSampah", sharedPreferences.getString(Config.SHARED_PREF_ID, ""))
                 .enqueue(new Callback<ArrayList<StatusSampahModel>>() {
@@ -87,6 +94,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         holder.btnAmbil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                https://www.google.com/maps/search/-6.9987135,110.3055433
                 AlertDialog.Builder xBuilder = new AlertDialog.Builder(context);
                 xBuilder.setTitle("Peringatan");
                 xBuilder.setMessage("Apakah anda yakin ingin mengambil sampah dari " + menuModels.get(position).getNamaPenyetor());
@@ -103,12 +111,10 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
                                                 Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
-                                                Uri gmmIntentUri = Uri.parse("geo:"+ menuModels.get(position).getLat() + ", " + menuModels.get(position).getLongi());
-                                                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                                mapIntent.setPackage("com.google.android.apps.maps");
-                                                if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
-                                                    context.startActivity(mapIntent);
-                                                }
+                                                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f", 28.43242324,77.8977673);
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                                                context.startActivity(intent);
+                                                pushNotif(context, "Notifikasi", "Sampah di ambil oleh Petugas", regId);
                                                 ((PetugasActivity)context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -155,6 +161,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
                                                 Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                pushNotif(context, "Notifikasi", "Sampah telah selesai di proses", regId);
                                                 ((PetugasActivity)context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -207,5 +214,31 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
             btnAmbil = itemView.findViewById(R.id.btn_tukarkan);
             btnAmbilSelesai = itemView.findViewById(R.id.btn_tukarkan_selesai);
         }
+    }
+
+    public void pushNotif (final Context context, String title, String message, final String regID){
+        ApiService apiService = Client.getInstanceRetrofit();
+        apiService.pushNotif(title, message, "individual", regID)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                String error_msg = jsonObject.optString("error_msg");
+                                Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

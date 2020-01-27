@@ -4,19 +4,26 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
 import com.iavariav.kkntambakajibanksampah.ui.petugas.PetugasActivity;
+import com.iavariav.kkntambakajibanksampah.ui.user.DaftarUserActivity;
 import com.iavariav.kkntambakajibanksampah.ui.user.UserActivity;
 
 import org.json.JSONException;
@@ -39,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnMasuk;
 
     private static final int RC_CAMERA_AND_LOCATION = 1;
+    private String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,39 @@ public class LoginActivity extends AppCompatActivity {
         initView();
         getSupportActionBar().hide();
         methodRequiresTwoPermission();
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("regId", token);
+                        editor.apply();
+                        edtUsername.setText(token);
+
+                    }
+                });
+
+        tvCallme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), DaftarUserActivity.class));
+            }
+        });
+
         btnMasuk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                                     if (response.isSuccessful()) {
                                         try {
-                                            JSONObject jsonObject = new JSONObject(response.body().string());
+                                            final JSONObject jsonObject = new JSONObject(response.body().string());
                                             String error_msg = jsonObject.optString("error_msg");
                                             String username = jsonObject.optString("username");
                                             String namaUser = jsonObject.optString("nama_user");
@@ -85,8 +126,33 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
                                                 editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
                                                 editor.apply();
-                                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                                finishAffinity();
+                                                String firebaseId = sharedPreferences.getString("regId", "");
+
+                                                ApiService apiService = Client.getInstanceRetrofit();
+                                                apiService.postUpdateRegID(firebaseId, id)
+                                                        .enqueue(new Callback<ResponseBody>() {
+                                                            @Override
+                                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                                if (response.isSuccessful()){
+                                                                    try {
+                                                                        JSONObject jsonObject1 = new JSONObject(response.body().string());
+                                                                        String error_msg = jsonObject1.optString("error_msg");
+                                                                        Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                                                        finishAffinity();
+                                                                    } catch (JSONException e) {
+                                                                        e.printStackTrace();
+                                                                    } catch (IOException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                            }
+                                                        });
                                             } else if (rule.equalsIgnoreCase("petugas")){
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -99,8 +165,32 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
                                                 editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
                                                 editor.apply();
-                                                startActivity(new Intent(getApplicationContext(), PetugasActivity.class));
-                                                finishAffinity();
+                                                String firebaseId = sharedPreferences.getString("regId", "");
+                                                ApiService apiService = Client.getInstanceRetrofit();
+                                                apiService.postUpdateRegID(firebaseId, id)
+                                                        .enqueue(new Callback<ResponseBody>() {
+                                                            @Override
+                                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                                if (response.isSuccessful()){
+                                                                    try {
+                                                                        JSONObject jsonObject1 = new JSONObject(response.body().string());
+                                                                        String error_msg = jsonObject1.optString("error_msg");
+                                                                        Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                                        startActivity(new Intent(getApplicationContext(), PetugasActivity.class));
+                                                                        finishAffinity();
+                                                                    } catch (JSONException e) {
+                                                                        e.printStackTrace();
+                                                                    } catch (IOException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                            }
+                                                        });
                                             }
                                             else {
                                                 Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();

@@ -24,9 +24,16 @@ import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.model.StatusSampahModel;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
 import com.iavariav.kkntambakajibanksampah.rest.Client;
+import com.iavariav.kkntambakajibanksampah.service.ConnectionReceiver;
+import com.iavariav.kkntambakajibanksampah.ui.SplashScreenActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +54,8 @@ public class AproveFragment extends Fragment {
     private TextView tvCountdownTime;
     private Button btnShare;
 
+    private ConnectionReceiver connectionReceiver;
+
     public AproveFragment() {
         // Required empty public constructor
     }
@@ -59,6 +68,7 @@ public class AproveFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_aprove, container, false);
         initView(view);
         statusSampahModels = new ArrayList<>();
+//        connectionReceiver = new ConnectionReceiver();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         idUser = sharedPreferences.getString(Config.SHARED_PREF_ID, "");
         btnShare.setOnClickListener(new View.OnClickListener() {
@@ -69,11 +79,40 @@ public class AproveFragment extends Fragment {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Ayo ikuti bank sampah agar bumi kita semakin sehat :) \nDownload aplikasinya di ... \nKKN UPGRIS TAMBAKAJI 2020" );
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
+
+//                pushNotif(getActivity(), "Notif", "COba", "dtj_1Q8NMCk:APA91bEgJQevs0ZqlRzB6Zg7Zu3qbt9SW63zAA_OjcAC2Jy4NKW_y5jfPdFBX07gtgQmXWNZ9r7N86WzkybQq0tRd7bCBmblB49AINu4q-SZGppkUBM75nFTWEznwiOMB3xyc5PN0z3n");
             }
         });
 
         getAprove();
         return view;
+    }
+
+
+    public void pushNotif (final Context context, String title, String message, final String regID){
+        ApiService apiService = Client.getInstanceRetrofit();
+        apiService.pushNotif(title, message, "individual", regID)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()){
+                            try {
+                                JSONObject jsonObject = new JSONObject(response.body().string());
+                                String error_msg = jsonObject.optString("tittle");
+                                Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void getTime() {
@@ -92,7 +131,7 @@ public class AproveFragment extends Fragment {
         }.start();
     }
 
-    private void getAprove() {
+    public void getAprove() {
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.getStatusBarang("getStatusSampah", idUser)
                 .enqueue(new Callback<ArrayList<StatusSampahModel>>() {
@@ -111,6 +150,9 @@ public class AproveFragment extends Fragment {
                                 rv.setLayoutManager(new LinearLayoutManager(getActivity()));
                                 rv.setAdapter(aproveSampahAdapter);
                                 aproveSampahAdapter.notifyDataSetChanged();
+//                                Intent intent = new Intent("com.iavariav.kkntambakajibanksampah.SOME_ACTION");
+//                                connectionReceiver.onReceive(getActivity(), intent);
+//                                getActivity().sendBroadcast(intent);
                                 getTime();
                             }
 

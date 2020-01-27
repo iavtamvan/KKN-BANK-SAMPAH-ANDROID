@@ -34,6 +34,18 @@ public interface ApiService {
     @GET("api_get.php")
     Call<ArrayList<StatusSampahModel>> getStatusBarangSelesai(@Query("change") String change);
 
+    @GET("api_get.php")
+    Call<ArrayList<StatusSampahModel>> getSampahNotif(@Query("change") String change);
+
+    @GET("firebase")
+    Call<ResponseBody> pushNotif(
+            @Query("title") String title,
+            @Query("message") String message,
+            @Query("push_type") String push_type,
+            @Query("regId") String regId
+
+    );
+
     @FormUrlEncoded
     @POST("user/api__tambah_pemesanan_sampah.php")
     Call<ResponseBody> postPemesanan(@Field("id_user") String id_user,
@@ -46,6 +58,11 @@ public interface ApiService {
                                 @Field("status_sampah") String status_sampah,
                                 @Field("token_reg") String token_reg,
                                 @Field("point") String point
+    );
+    @FormUrlEncoded
+    @POST("api_update_reg_id.php")
+    Call<ResponseBody> postUpdateRegID(@Field("firebase_id") String firebaseid,
+                                @Field("id_user") String id_user
     );
     @FormUrlEncoded
     @POST("user/tukar_sampah.php")
@@ -70,5 +87,18 @@ public interface ApiService {
                                 @Field("token_reg") String token_reg,
                                 @Field("status_sampah") String status_sampah,
                                 @Field("nama_petugas") String nama_petugas
+    );
+    @FormUrlEncoded
+    @POST("user/api_daftar_akun.php")
+    Call<ResponseBody> postDaftarUser(
+                                @Field("nama_user") String nama_user,
+                                @Field("nik_user") String nik_user,
+                                @Field("alamat_user") String alamat_user,
+                                @Field("lat_user") String lat_user,
+                                @Field("long_user") String long_user,
+                                @Field("username") String username,
+                                @Field("password") String password,
+                                @Field("reg_id") String reg_id,
+                                @Field("firebase_id") String firebase_id
     );
 }
