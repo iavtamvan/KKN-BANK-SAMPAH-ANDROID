@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 import im.delight.android.location.SimpleLocation;
@@ -54,6 +55,7 @@ public class InputSampahFragment extends Fragment {
     private String long_user;
     private String firebase_id;
     private String namaLengkap;
+    private String regIdUser;
 
     private SimpleLocation location;
 
@@ -68,7 +70,11 @@ public class InputSampahFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_sampah, container, false);
         initView(view);
-        location = new SimpleLocation(getActivity());
+        location = new SimpleLocation(Objects.requireNonNull(getActivity()));// if we can't access the location yet
+        if (!location.hasLocationEnabled()) {
+            // ask the user to enable location access
+            SimpleLocation.openSettings(getActivity());
+        }
 
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         username = sharedPreferences.getString(Config.SHARED_PREF_USERNAME, "");
@@ -79,6 +85,7 @@ public class InputSampahFragment extends Fragment {
         long_user = sharedPreferences.getString(Config.SHARED_PREF_LONG_USER, "");
         firebase_id = sharedPreferences.getString(Config.SHARED_PREF_FIREBASE_ID, "");
         namaLengkap = sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, "");
+        regIdUser = sharedPreferences.getString(Config.SHARED_PREF_REG_ID, "");
 
         Random r = new Random();
         final int i1 = (r.nextInt(80) + 65);
@@ -98,8 +105,8 @@ public class InputSampahFragment extends Fragment {
             public void onClick(View view) {
                 beratPoin = 10 * Integer.parseInt(edtBeratSampah.getText().toString().trim());
                 ApiService apiService = Client.getInstanceRetrofit();
-                apiService.postPemesanan(id, namaLengkap, alamat_user, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), selectedSpn, edtBeratSampah.getText().toString().trim(),
-                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin), sharedPreferences.getString("regId", ""))
+                apiService.postPemesanan(id, namaLengkap, alamat_user, location.getLatitude(), location.getLongitude(), selectedSpn, edtBeratSampah.getText().toString().trim(),
+                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin), sharedPreferences.getString("regId", ""), regIdUser)
                         .enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

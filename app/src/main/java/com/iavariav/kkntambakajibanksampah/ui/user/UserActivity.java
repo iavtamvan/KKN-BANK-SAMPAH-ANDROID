@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.navigation.NavigationView;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
+import com.iavariav.kkntambakajibanksampah.ui.user.fragment.HomeFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.InputSampahFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.RiwayatSampahFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.RiwayatTukarSampahFragment;
@@ -41,7 +42,7 @@ public class UserActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new InputSampahFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new HomeFragment()).commit();
         getSupportActionBar().setTitle("Pemesanan");
 
     }
@@ -84,7 +85,11 @@ public class UserActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.pemesanan_sampah) {
+        if (id == R.id.beranda) {
+            fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new HomeFragment()).commit();
+            getSupportActionBar().setTitle("Beramda");
+        } else if(id == R.id.pemesanan_sampah) {
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new InputSampahFragment()).commit();
             getSupportActionBar().setTitle("Input Sampah");

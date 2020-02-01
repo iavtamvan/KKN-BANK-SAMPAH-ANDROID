@@ -5,23 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context=".ui.user.DaftarUserActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_margin="8dp"
         android:layout_weight="1">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint="Masukan nama lengkapmu"
             android:inputType="text"
-            android:id="@+id/edt_nama_lengkap"/>
+            android:id="@+id/edt_nama_lengkap"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:background="@drawable/bg_edt"
+            android:layout_marginBottom="10dp"/>
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint="NIK (Sesuai KTP kamu ya)"
+            android:inputType="number"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:background="@drawable/bg_edt"
+            android:layout_marginBottom="10dp"
             android:id="@+id/edt_nik_user"/>
 
         <LinearLayout
@@ -67,13 +78,23 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint="Nama Pengguna"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:background="@drawable/bg_edt"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/edt_username"/>
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:background="@drawable/bg_edt"
+            android:layout_marginBottom="10dp"
             android:hint="Kata Sandi"
+            android:inputType="textPassword"
             android:id="@+id/edt_password"/>
     </LinearLayout>
 

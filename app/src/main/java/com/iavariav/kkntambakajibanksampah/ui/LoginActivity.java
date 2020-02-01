@@ -1,6 +1,7 @@
 package com.iavariav.kkntambakajibanksampah.ui;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.iavariav.kkntambakajibanksampah.BuildConfig;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
 import com.iavariav.kkntambakajibanksampah.rest.ApiService;
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_CAMERA_AND_LOCATION = 1;
     private String TAG;
+    private TextView tvVersi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         initView();
         getSupportActionBar().hide();
         methodRequiresTwoPermission();
+        tvVersi.setText(BuildConfig.BUILD_TYPE + "." + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE);
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -66,17 +70,12 @@ public class LoginActivity extends AppCompatActivity {
 
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "" + token, Toast.LENGTH_SHORT).show();
                         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("regId", token);
                         editor.apply();
-                        edtUsername.setText(token);
+//                        edtUsername.setText(token);
 
                     }
                 });
@@ -94,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (edtUsername.getText().toString().isEmpty() && edtPassword.getText().toString().isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Harus di isi dahulu username/passwordnya", Toast.LENGTH_SHORT).show();
                 } else {
+                    final ProgressDialog loading = ProgressDialog.show(LoginActivity.this, "Loading", "Validasi data...", false, false);
                     ApiService xApiService = Client.getInstanceRetrofit();
                     xApiService.getLogin(edtUsername.getText().toString().trim(), edtPassword.getText().toString().trim())
                             .enqueue(new Callback<ResponseBody>() {
@@ -111,8 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                             String lat_user = jsonObject.optString("lat_user");
                                             String long_user = jsonObject.optString("long_user");
                                             String firebase_id = jsonObject.optString("firebase_id");
-
-                                            Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                            String reg_id = jsonObject.optString("regID");
 
                                             if (rule.equalsIgnoreCase("user")) {
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
@@ -125,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString(Config.SHARED_PREF_LONG_USER, long_user);
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
                                                 editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
+                                                editor.putString(Config.SHARED_PREF_REG_ID, reg_id);
                                                 editor.apply();
                                                 String firebaseId = sharedPreferences.getString("regId", "");
 
@@ -133,11 +133,12 @@ public class LoginActivity extends AppCompatActivity {
                                                         .enqueue(new Callback<ResponseBody>() {
                                                             @Override
                                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                                if (response.isSuccessful()){
+                                                                if (response.isSuccessful()) {
                                                                     try {
                                                                         JSONObject jsonObject1 = new JSONObject(response.body().string());
                                                                         String error_msg = jsonObject1.optString("error_msg");
                                                                         Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                                        loading.dismiss();
                                                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                                                         finishAffinity();
                                                                     } catch (JSONException e) {
@@ -150,10 +151,11 @@ public class LoginActivity extends AppCompatActivity {
 
                                                             @Override
                                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                                                loading.dismiss();
+                                                                Toast.makeText(LoginActivity.this, "U-Fire " + t.getMessage() , Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
-                                            } else if (rule.equalsIgnoreCase("petugas")){
+                                            } else if (rule.equalsIgnoreCase("petugas")) {
                                                 SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putString(Config.SHARED_PREF_USERNAME, username);
@@ -164,6 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.putString(Config.SHARED_PREF_LONG_USER, long_user);
                                                 editor.putString(Config.SHARED_PREF_FIREBASE_ID, firebase_id);
                                                 editor.putString(Config.SHARED_PREF_NAMA_LENGKAP, namaUser);
+                                                editor.putString(Config.SHARED_PREF_REG_ID, reg_id);
                                                 editor.apply();
                                                 String firebaseId = sharedPreferences.getString("regId", "");
                                                 ApiService apiService = Client.getInstanceRetrofit();
@@ -171,11 +174,12 @@ public class LoginActivity extends AppCompatActivity {
                                                         .enqueue(new Callback<ResponseBody>() {
                                                             @Override
                                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                                if (response.isSuccessful()){
+                                                                if (response.isSuccessful()) {
                                                                     try {
                                                                         JSONObject jsonObject1 = new JSONObject(response.body().string());
                                                                         String error_msg = jsonObject1.optString("error_msg");
                                                                         Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                                        loading.dismiss();
                                                                         startActivity(new Intent(getApplicationContext(), PetugasActivity.class));
                                                                         finishAffinity();
                                                                     } catch (JSONException e) {
@@ -188,11 +192,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                                             @Override
                                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                                                                loading.dismiss();
+                                                                Toast.makeText(LoginActivity.this, "U-Fire " + t.getMessage() , Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
-                                            }
-                                            else {
+                                            } else {
+                                                loading.dismiss();
                                                 Toast.makeText(LoginActivity.this, "" + error_msg, Toast.LENGTH_SHORT).show();
                                             }
 
@@ -207,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                    loading.dismiss();
                                     Toast.makeText(LoginActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -234,5 +240,6 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edt_password);
         tvCallme = findViewById(R.id.tv_callme);
         btnMasuk = findViewById(R.id.btn_masuk);
+        tvVersi = findViewById(R.id.tv_versi);
     }
 }

@@ -18,6 +18,7 @@ public final class Config {
     public static final String SHARED_PREF_LONG_USER = "LONG_USER";
     public static final String SHARED_PREF_FIREBASE_ID = "FIREBASE_ID";
     public static final String SHARED_PREF_NAMA_LENGKAP = "NAMA_LENGKAP";
+    public static final String SHARED_PREF_REG_ID = "REG_ID_USER";
 
 
     public static final String SHARED_PREF_REGID_FIREBASE = "KKN_REGID_FIREBASE";
@@ -59,7 +60,7 @@ public final class Config {
     public static final String BUNDLE_JARAK_PER_KM = "BUNDLE_JARAK_PER_KM";
     public static final String BUNDLE_BENSIN_PER_LITER = "BUNDLE_BENSIN_PER_LITER";
     public static final String BUNDLE_REG_TOKEN_PEMESANAN = "BUNDLE_REG_TOKEN_PEMESANAN";
-
+    public static final String BUNDLE_URL_NEWS = "URL_NEWS";
 
 
     public static void sharedPref(Context context, String idUser, String username, String rule) {

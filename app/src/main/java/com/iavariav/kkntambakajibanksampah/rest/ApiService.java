@@ -3,6 +3,8 @@ package com.iavariav.kkntambakajibanksampah.rest;
 import com.iavariav.kkntambakajibanksampah.model.RiwayatModel;
 import com.iavariav.kkntambakajibanksampah.model.StatusSampahModel;
 import com.iavariav.kkntambakajibanksampah.model.StokBarangModel;
+import com.iavariav.kkntambakajibanksampah.model.berita.ArticlesItem;
+import com.iavariav.kkntambakajibanksampah.model.berita.RootBeritaModel;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,10 @@ public interface ApiService {
     @GET("api_get.php")
     Call<ArrayList<StatusSampahModel>> getSampahNotif(@Query("change") String change);
 
+    @GET("api_get.php")
+    Call<ResponseBody> getHome(@Query("change") String change,
+                               @Query("reg_id") String regId);
+
     @GET("firebase")
     Call<ResponseBody> pushNotif(
             @Query("title") String title,
@@ -51,14 +57,15 @@ public interface ApiService {
     Call<ResponseBody> postPemesanan(@Field("id_user") String id_user,
                                 @Field("nama_penyetor") String nama_penyetor,
                                 @Field("alamat_penyetor") String alamat_penyetor,
-                                @Field("lat") String lat,
-                                @Field("longi") String longi,
+                                @Field("lat") double lat,
+                                @Field("longi") double longi,
                                 @Field("jenis_sampah") String jenis_sampah,
                                 @Field("berat_sampah") String berat_sampah,
                                 @Field("status_sampah") String status_sampah,
                                 @Field("token_reg") String token_reg,
                                 @Field("point") String point,
-                                @Field("firebase_id") String firebase_id
+                                @Field("firebase_id") String firebase_id,
+                                @Field("reg_id") String reg_id
     );
     @FormUrlEncoded
     @POST("api_update_reg_id.php")
@@ -78,7 +85,6 @@ public interface ApiService {
                                 @Field("reg_barang") String reg_barang,
                                 @Field("foto_url_barang") String foto_url_barang,
                                 @Field("status_barang") String status_barang,
-                                @Field("tgl_penukaran_barang") String tgl_penukaran_barang,
                                 @Field("kadaluarsa_barang") String kadaluarsa_barang,
                                 @Field("change") String change
     );
@@ -95,11 +101,25 @@ public interface ApiService {
                                 @Field("nama_user") String nama_user,
                                 @Field("nik_user") String nik_user,
                                 @Field("alamat_user") String alamat_user,
-                                @Field("lat_user") String lat_user,
-                                @Field("long_user") String long_user,
+                                @Field("lat_user") double lat_user,
+                                @Field("long_user") double long_user,
                                 @Field("username") String username,
                                 @Field("password") String password,
                                 @Field("reg_id") String reg_id,
                                 @Field("firebase_id") String firebase_id
     );
+    @FormUrlEncoded
+    @POST("petugas/update_poin_selesai.php")
+    Call<ResponseBody> postUpdatePoin(
+                                @Field("reg_id") String idUser,
+                                @Field("token_reg") String token
+    );
+
+
+    // API BERITA
+
+    @GET("everything?q=sampah&apiKey=12850cd010b54441aaeff6749dc99cd0")
+    Call<RootBeritaModel> getBeritaSampah();
+
+
 }

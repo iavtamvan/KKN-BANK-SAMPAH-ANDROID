@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.iavariav.kkntambakajibanksampah">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,8 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".ui.user.DaftarUserActivity"></activity>
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="m"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity
+            android:name=".ui.user.WebViewActivity"
+            android:parentActivityName=".ui.user.UserActivity"
+            android:label="Berita" />
+        <activity android:name=".ui.user.DaftarUserActivity"
+            android:label="Daftar Akun"/>
         <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +32,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.LoginActivity"></activity>
+        <activity android:name=".ui.LoginActivity"
+            android:label="Login"/>
         <activity
             android:name=".ui.user.UserActivity"
             android:label="Bank Sampah"
@@ -34,7 +44,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDr6xm0SE14RVfE2Oi7AXydOpkd2FhyHHI" />
+            android:value="AIzaSyCRYz8BxCxqQ8-51X-zUhgMSW-F7_9egHM" />
 
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
@@ -49,7 +59,8 @@
 
         <receiver android:name=".service.ConnectionReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver>
     </application>
