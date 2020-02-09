@@ -34,10 +34,10 @@ public class RiwayatTukarBarangAdapter extends RecyclerView.Adapter<RiwayatTukar
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.tvNamaBarangTipe.setText(menuModels.get(position).getNamaPetugas() + ", " + menuModels.get(position).getTipeBarang());
+        holder.tvNamaBarangTipe.setText(menuModels.get(position).getTipeBarang());
         holder.tvTgl.setText(menuModels.get(position).getKadaluarsaBarang());
         holder.tvNamaPemasok.setText("Nama pemasok barang : " + menuModels.get(position).getNamaPemasok());
-        holder.tvNamaPetugas.setText("Nama Petugas : " +menuModels.get(position).getNamaPetugas());
+        holder.tvNamaPetugas.setText(menuModels.get(position).getDeskripsiBarang());
         Glide.with(context).load(menuModels.get(position).getFotoUrlBarang()).into(holder.tvLvRiwayat);
     }
 

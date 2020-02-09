@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,11 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
     String firebaseId;
     String regId;
 
+    AlertDialog.Builder dialog;
+    LayoutInflater inflater;
+    View dialogView;
+    private EditText txt_nama;
+
     public AproveSampahAdapter(Context context, ArrayList<StatusSampahModel> menuModels) {
         this.context = context;
         this.menuModels = menuModels;
@@ -75,10 +81,10 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                 .enqueue(new Callback<ArrayList<StatusSampahModel>>() {
                     @Override
                     public void onResponse(Call<ArrayList<StatusSampahModel>> call, Response<ArrayList<StatusSampahModel>> response) {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             menuModels = new ArrayList<>();
                             menuModels = response.body();
-                            if (menuModels.get(position).getStatusSampah().equalsIgnoreCase("Ordered")){
+                            if (menuModels.get(position).getStatusSampah().equalsIgnoreCase("Ordered")) {
                                 holder.btnAmbil.setVisibility(View.VISIBLE);
                                 holder.btnAmbilSelesai.setVisibility(View.GONE);
                             } else {
@@ -109,7 +115,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                 .enqueue(new Callback<ResponseBody>() {
                                     @Override
                                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()){
+                                        if (response.isSuccessful()) {
                                             try {
                                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                                 String error_msg = jsonObject.optString("error_msg");
@@ -119,7 +125,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                                                 mapIntent.setPackage("com.google.android.apps.maps");
                                                 context.startActivity(mapIntent);
                                                 pushNotif(context, "Notifikasi", "Sampah di ambil oleh Petugas " + menuModels.get(position).getNamaPetugas(), firebaseId);
-                                                ((PetugasActivity)context).refresh();
+                                                ((PetugasActivity) context).refresh();
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             } catch (IOException e) {
@@ -149,46 +155,105 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         holder.btnAmbilSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder xBuilder = new AlertDialog.Builder(context);
-                xBuilder.setTitle("Peringatan");
-                xBuilder.setMessage("Selesai mengambil dari " + menuModels.get(position).getNamaPenyetor() + " ?");
-                xBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        ApiService apiService = Client.getInstanceRetrofit();
-                        apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Selesai", sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, ""))
-                                .enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()){
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(response.body().string());
-                                                String error_msg = jsonObject.optString("error_msg");
-                                                Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
-                                                updatePoin(regId, menuModels.get(position).getTokenReg());
-                                                pushNotif(context, "Notifikasi", "Sampah telah selesai di proses Oleh " + menuModels.get(position).getNamaPetugas(), firebaseId);
-                                                ((PetugasActivity)context).refresh();
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
+                dialog = new AlertDialog.Builder(context);
+                dialogView = LayoutInflater.from(context).inflate(R.layout.form_data_popup, null);
+                dialog.setView(dialogView);
+                dialog.setCancelable(true);
+                dialog.setIcon(R.mipmap.ic_launcher);
+                dialog.setTitle("Berat Sampah");
 
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }
-                });
-                xBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+                txt_nama = (EditText) dialogView.findViewById(R.id.txt_nama);
+
+//        kosong();
+
+                dialog.setPositiveButton("KIRIM", new DialogInterface.OnClickListener() {
+
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (txt_nama.toString().isEmpty()) {
+                            Toast.makeText(context, "Isi berat sampah", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ApiService apiService = Client.getInstanceRetrofit();
+                            apiService.postAproveSampah(menuModels.get(position).getTokenReg(), "Selesai", sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, ""))
+                                    .enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                            if (response.isSuccessful()) {
+                                                try {
+                                                    JSONObject jsonObject = new JSONObject(response.body().string());
+                                                    String error_msg = jsonObject.optString("error_msg");
+//                                                Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                    ApiService apiService1 = Client.getInstanceRetrofit();
+                                                    apiService1.postSelesaiSampah(menuModels.get(position).getTokenReg(), txt_nama.getText().toString().trim())
+                                                            .enqueue(new Callback<ResponseBody>() {
+                                                                @Override
+                                                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                                    if (response.isSuccessful()){
+                                                                        JSONObject jsonObject = null;
+                                                                        try {
+                                                                            jsonObject = new JSONObject(response.body().string());
+                                                                            String error_msg = jsonObject.optString("error_msg");
+                                                                            Toast.makeText(context, "" + error_msg, Toast.LENGTH_SHORT).show();
+                                                                            updatePoin(regId, menuModels.get(position).getTokenReg());
+                                                                            pushNotif(context, "Notifikasi", "Sampah telah selesai di proses Oleh " + menuModels.get(position).getNamaPetugas(), firebaseId);
+                                                                            ((PetugasActivity) context).refresh();
+                                                                        } catch (JSONException e) {
+                                                                            e.printStackTrace();
+                                                                        } catch (IOException e) {
+                                                                            e.printStackTrace();
+                                                                        }
 
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                                    Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
                     }
-                }).show();
+                });
+
+                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
+
+//                AlertDialog.Builder xBuilder = new AlertDialog.Builder(context);
+//                xBuilder.setTitle("Peringatan");
+//                xBuilder.setMessage("Selesai mengambil dari " + menuModels.get(position).getNamaPenyetor() + " ?");
+//                xBuilder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//                xBuilder.setNeutralButton("Close", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                }).show();
 
             }
         });
@@ -208,6 +273,7 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         private CardView cvKlik;
         private Button btnAmbil;
         private Button btnAmbilSelesai;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLvRiwayat = itemView.findViewById(R.id.tv_lv_riwayat);
@@ -221,13 +287,13 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
         }
     }
 
-    public void pushNotif (final Context context, String title, String message, final String firebaseId){
+    public void pushNotif(final Context context, String title, String message, final String firebaseId) {
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.pushNotif(title, message, "individual", firebaseId)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                 String error_msg = jsonObject.optString("error_msg");
@@ -247,13 +313,13 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                 });
     }
 
-    public void updatePoin(String regId, String tokenReg){
+    public void updatePoin(String regId, String tokenReg) {
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.postUpdatePoin(regId, tokenReg)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                 String error_msg = jsonObject.optString("error_msg");
@@ -271,5 +337,42 @@ public class AproveSampahAdapter extends RecyclerView.Adapter<AproveSampahAdapte
                         Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void dialogForm() {
+        dialog = new AlertDialog.Builder(context);
+        dialogView = LayoutInflater.from(context).inflate(R.layout.form_data_popup, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setIcon(R.mipmap.ic_launcher);
+        dialog.setTitle("Berat Sampah");
+
+        txt_nama = (EditText) dialogView.findViewById(R.id.txt_nama);
+
+//        kosong();
+
+        dialog.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+//                nama    = txt_nama.getText().toString();
+//                usia    = txt_usia.getText().toString();
+//                alamat  = txt_alamat.getText().toString();
+//                status = txt_status.getText().toString();
+//
+//                tvKlikToast.setText("Nama : " + nama + "\n" + "Usia : " + usia + "\n" + "Alamat : " + alamat + "\n" + "Status : " + status);
+//                dialog.dismiss();
+            }
+        });
+
+        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

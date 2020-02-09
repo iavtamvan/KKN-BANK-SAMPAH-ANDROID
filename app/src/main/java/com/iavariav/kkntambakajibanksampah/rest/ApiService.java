@@ -60,10 +60,10 @@ public interface ApiService {
                                 @Field("lat") double lat,
                                 @Field("longi") double longi,
                                 @Field("jenis_sampah") String jenis_sampah,
-                                @Field("berat_sampah") String berat_sampah,
+//                                @Field("berat_sampah") String berat_sampah,
                                 @Field("status_sampah") String status_sampah,
                                 @Field("token_reg") String token_reg,
-                                @Field("point") String point,
+//                                @Field("point") String point,
                                 @Field("firebase_id") String firebase_id,
                                 @Field("reg_id") String reg_id
     );
@@ -76,6 +76,7 @@ public interface ApiService {
     @POST("user/tukar_sampah.php")
     Call<ResponseBody> postTukarSampah(
                                 @Field("id_user") String id_user,
+                                @Field("reg_id") String reg_id,
                                 @Field("kurang") String kurang,
                                 @Field("nama_barang") String nama_barang,
                                 @Field("nama_pemasok") String nama_pemasok,
@@ -96,6 +97,12 @@ public interface ApiService {
                                 @Field("nama_petugas") String nama_petugas
     );
     @FormUrlEncoded
+    @POST("petugas/update_berat_sampah.php")
+    Call<ResponseBody> postSelesaiSampah(
+                                @Field("token_reg") String token_reg,
+                                @Field("berat_sampah") String berat_sampah
+    );
+    @FormUrlEncoded
     @POST("user/api_daftar_akun.php")
     Call<ResponseBody> postDaftarUser(
                                 @Field("nama_user") String nama_user,
@@ -106,7 +113,9 @@ public interface ApiService {
                                 @Field("username") String username,
                                 @Field("password") String password,
                                 @Field("reg_id") String reg_id,
-                                @Field("firebase_id") String firebase_id
+                                @Field("firebase_id") String firebase_id,
+                                @Field("rt") String rt,
+                                @Field("rw") String rw
     );
     @FormUrlEncoded
     @POST("petugas/update_poin_selesai.php")

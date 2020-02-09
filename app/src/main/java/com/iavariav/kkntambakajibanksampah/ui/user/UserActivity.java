@@ -43,7 +43,7 @@ public class UserActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new HomeFragment()).commit();
-        getSupportActionBar().setTitle("Pemesanan");
+        getSupportActionBar().setTitle("Beranda");
 
     }
 

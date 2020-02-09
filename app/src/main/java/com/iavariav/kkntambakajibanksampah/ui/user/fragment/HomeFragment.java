@@ -72,11 +72,6 @@ public class HomeFragment extends Fragment {
         articlesItems = new ArrayList<>();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         regId = sharedPreferences.getString(Config.SHARED_PREF_REG_ID, "");
-        Toast.makeText(getActivity(), "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "" + regId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "" + regId, Toast.LENGTH_SHORT).show();
         namaLengkap = sharedPreferences.getString(Config.SHARED_PREF_NAMA_LENGKAP, "");
         tvNamaSelamatDatang.setText(namaLengkap);
         getHome();
@@ -150,7 +145,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<RootBeritaModel> call, Throwable t) {
-                Toast.makeText(getActivity(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 getBerita();
             }
         });

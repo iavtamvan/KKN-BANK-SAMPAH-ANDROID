@@ -32,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Random;
 
 import im.delight.android.location.SimpleLocation;
@@ -60,6 +59,8 @@ public class DaftarUserActivity extends AppCompatActivity {
     private final static int PLACE_PICKER_REQUEST = 999;
     private String placeNameAdress;
     private String placeName;
+    private TextInputEditText edtRt;
+    private TextInputEditText edtRw;
 
 
     @Override
@@ -109,15 +110,15 @@ public class DaftarUserActivity extends AppCompatActivity {
                 ApiService apiService = Client.getInstanceRetrofit();
                 apiService.postDaftarUser(edtNamaLengkap.getText().toString().trim(), edtNikUser.getText().toString().trim(),
                         tvLokasi.getText().toString().trim(), latitude, longitude, edtUsername.getText().toString().trim(),
-                        edtPassword.getText().toString().trim(), "KKN-2020-USER" + i1 + location.getLongitude() + i1, token)
+                        edtPassword.getText().toString().trim(), "KKN-2020-USER" + i1 + location.getLongitude() + i1, token, edtRt.getText().toString().trim(), edtRw.getText().toString().trim())
                         .enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     try {
                                         JSONObject jsonObject = new JSONObject(response.body().string());
                                         String errro_msg = jsonObject.optString("error_msg");
-                                        if (errro_msg.equalsIgnoreCase("Berhasil")){
+                                        if (errro_msg.equalsIgnoreCase("Berhasil")) {
                                             loading.dismiss();
                                             Toast.makeText(DaftarUserActivity.this, "" + errro_msg, Toast.LENGTH_SHORT).show();
                                             finishAffinity();
@@ -161,11 +162,12 @@ public class DaftarUserActivity extends AppCompatActivity {
                     longitude = place.getLatLng().longitude;
                     placeNameAdress = String.format("%s", place.getAddress());
                     placeName = String.format("%s", place.getName());
-                    tvLokasi.setText(placeName +", " + placeNameAdress);
+                    tvLokasi.setText(placeName + ", " + placeNameAdress);
 
                     SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-
+                    editor.putString(Config.BUNDLE_LAT_AWAL, String.valueOf(latitude));
+                    editor.putString(Config.BUNDLE_LONG_AWAL, String.valueOf(longitude));
 
                     editor.apply();
 //                    placeNameAdress = String.format("%s", place.getAddress());
@@ -197,5 +199,7 @@ public class DaftarUserActivity extends AppCompatActivity {
         edtUsername = findViewById(R.id.edt_username);
         edtPassword = findViewById(R.id.edt_password);
         btnDaftar = findViewById(R.id.btn_daftar);
+        edtRt = findViewById(R.id.edt_rt);
+        edtRw = findViewById(R.id.edt_rw);
     }
 }

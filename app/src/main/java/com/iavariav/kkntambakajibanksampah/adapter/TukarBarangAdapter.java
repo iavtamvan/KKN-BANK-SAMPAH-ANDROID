@@ -2,6 +2,7 @@ package com.iavariav.kkntambakajibanksampah.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,14 +66,14 @@ public class TukarBarangAdapter extends RecyclerView.Adapter<TukarBarangAdapter.
         holder.btnTukarkan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getHome(idUser, holder.tvPoint.getText().toString().trim(), menuModels.get(position).getNamaBarang(), menuModels.get(position).getNamaPemasok()
+                getHome(idUser, regId, holder.tvPoint.getText().toString().trim(), menuModels.get(position).getNamaBarang(), menuModels.get(position).getNamaPemasok()
                         , menuModels.get(position).getTipeBarang(), menuModels.get(position).getDeskripsiBarang(), menuModels.get(position).getPointBarang(),menuModels.get(position).getRegBarang(),
                         menuModels.get(position).getFotoUrlBarang(), menuModels.get(position).getStatusBarang(), menuModels.get(position).getKadaluarsaBarang());
             }
         });
     }
 
-    private void getHome(final String idUser, final String pointKurangBarang, final String namabarang, final String namaPemasok, final String tipeBarang, final String deskripsiBarang, final String pointBarang, final String regBarang, final String fotoUrlBarang,
+    private void getHome(final String idUser, final String regId, final String pointKurangBarang, final String namabarang, final String namaPemasok, final String tipeBarang, final String deskripsiBarang, final String pointBarang, final String regBarang, final String fotoUrlBarang,
                          final String statusBarang, final String kadaluarsaBarang) {
         ApiService apiService = Client.getInstanceRetrofit();
         apiService.getHome("getHome", regId)
@@ -86,7 +87,7 @@ public class TukarBarangAdapter extends RecyclerView.Adapter<TukarBarangAdapter.
                                 String status_ordered = jsonObject.optString("status_ordered");
                                 String point_user = jsonObject.optString("point_user");
 
-                                if (point_user.equalsIgnoreCase("0")){
+                                if (point_user.equalsIgnoreCase("0") || Integer.parseInt(point_user) <= Integer.parseInt(pointBarang)){
                                     Toast.makeText(context, "Poin anda kurang", Toast.LENGTH_SHORT).show();
                                 } else {
                                     AlertDialog.Builder xBuilder = new AlertDialog.Builder(context);
@@ -96,7 +97,7 @@ public class TukarBarangAdapter extends RecyclerView.Adapter<TukarBarangAdapter.
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             ApiService apiService = Client.getInstanceRetrofit();
-                                            apiService.postTukarSampah(idUser, pointKurangBarang, namabarang, namaPemasok
+                                            apiService.postTukarSampah(idUser, regId, pointKurangBarang, namabarang, namaPemasok
                                                     , tipeBarang, deskripsiBarang, pointBarang,regBarang,
                                                     fotoUrlBarang, statusBarang, kadaluarsaBarang,
                                                     "tukarPoint")

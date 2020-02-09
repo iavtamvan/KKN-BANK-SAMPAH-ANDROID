@@ -7,7 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Client {
 
-    private static String BASE_URL = "http://192.168.43.76/~mac/kkn2020/";
+    private static String BASE_URL = "http://sig.upgris.ac.id/api_iav/kkn/api/";
+//    private static String BASE_URL = "http://192.168.100.26/~mac/kkn2020/";
+//    private static String BASE_URL = "http://192.168.43.76/~mac/kkn2020/";
     private static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

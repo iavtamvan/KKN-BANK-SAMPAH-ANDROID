@@ -103,10 +103,10 @@ public class InputSampahFragment extends Fragment {
         btnKirim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                beratPoin = 10 * Integer.parseInt(edtBeratSampah.getText().toString().trim());
+//                beratPoin = 10 * Integer.parseInt(edtBeratSampah.getText().toString().trim());
                 ApiService apiService = Client.getInstanceRetrofit();
-                apiService.postPemesanan(id, namaLengkap, alamat_user, location.getLatitude(), location.getLongitude(), selectedSpn, edtBeratSampah.getText().toString().trim(),
-                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, String.valueOf(beratPoin), sharedPreferences.getString("regId", ""), regIdUser)
+                apiService.postPemesanan(id, namaLengkap, alamat_user, location.getLatitude(), location.getLongitude(), selectedSpn,
+                        "Ordered", "KKN-2020-TAMBAKAJI-" + i1 + location.getLongitude() + lat_user + i1, sharedPreferences.getString("regId", ""), regIdUser)
                         .enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

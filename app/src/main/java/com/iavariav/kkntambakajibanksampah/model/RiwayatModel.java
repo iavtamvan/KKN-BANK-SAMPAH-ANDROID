@@ -55,6 +55,16 @@ public class RiwayatModel {
     @SerializedName("foto_url_barang")
     private String fotoUrlBarang;
 
+    @SerializedName("deskripsi_barang")
+    private String deskripsiBarang;
+
+    public String getDeskripsiBarang() {
+        return deskripsiBarang;
+    }
+
+    public void setDeskripsiBarang(String deskripsiBarang) {
+        this.deskripsiBarang = deskripsiBarang;
+    }
 
     public String getFotoUrlBarang() {
         return fotoUrlBarang;
