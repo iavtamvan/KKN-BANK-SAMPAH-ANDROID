@@ -9,6 +9,10 @@
             android:icon="@drawable/logo"
             android:title="Beranda" />
         <item
+            android:id="@+id/edukasi"
+            android:icon="@drawable/logo"
+            android:title="Edukasi" />
+        <item
             android:id="@+id/pemesanan_sampah"
             android:icon="@drawable/logo"
             android:title="Kirim Sampah" />

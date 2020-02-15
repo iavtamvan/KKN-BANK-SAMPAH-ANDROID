@@ -1,5 +1,6 @@
 package com.iavariav.kkntambakajibanksampah.rest;
 
+import com.iavariav.kkntambakajibanksampah.model.EdukasiModel;
 import com.iavariav.kkntambakajibanksampah.model.RiwayatModel;
 import com.iavariav.kkntambakajibanksampah.model.StatusSampahModel;
 import com.iavariav.kkntambakajibanksampah.model.StokBarangModel;
@@ -38,6 +39,9 @@ public interface ApiService {
 
     @GET("api_get.php")
     Call<ArrayList<StatusSampahModel>> getSampahNotif(@Query("change") String change);
+
+    @GET("api_get.php")
+    Call<ArrayList<EdukasiModel>> getEdukasi(@Query("change") String change);
 
     @GET("api_get.php")
     Call<ResponseBody> getHome(@Query("change") String change,

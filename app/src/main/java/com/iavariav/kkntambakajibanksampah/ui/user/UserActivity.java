@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.navigation.NavigationView;
 import com.iavariav.kkntambakajibanksampah.R;
 import com.iavariav.kkntambakajibanksampah.helper.Config;
+import com.iavariav.kkntambakajibanksampah.ui.user.fragment.EdukasiFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.HomeFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.InputSampahFragment;
 import com.iavariav.kkntambakajibanksampah.ui.user.fragment.RiwayatSampahFragment;
@@ -93,6 +94,10 @@ public class UserActivity extends AppCompatActivity
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new InputSampahFragment()).commit();
             getSupportActionBar().setTitle("Input Sampah");
+        }else if(id == R.id.edukasi) {
+            fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new EdukasiFragment()).commit();
+            getSupportActionBar().setTitle("Edukasi");
         } else if (id == R.id.riwayat_sampah) {
             fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fm_view_pager_nav, new RiwayatSampahFragment()).commit();
