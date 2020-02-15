@@ -62,6 +62,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="260dp"
+        android:scaleType="fitXY"
         android:id="@+id/iv_backdrop_1"/>
 
     <ScrollView
@@ -72,7 +73,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:layout_marginRight="8dp">
 
             <TextView
@@ -104,7 +105,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Batu bata ramah lingkungan dari sampah p"
+                android:text=""
                 android:fontFamily="sans-serif-black"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/tv_keterangan_lainnya_edukasi"/>
